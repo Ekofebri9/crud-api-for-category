@@ -14,6 +14,14 @@ var categories = []models.Category{
 	{ID: 2, Name: "Minuman", Description: "Berbagai jenis minuman segar"},
 }
 
+func parseBody(w http.ResponseWriter, r *http.Request, v *models.Category) {
+	err := json.NewDecoder(r.Body).Decode(v)
+	if err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+}
+
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Hello, There! This is Category API")
@@ -50,11 +58,7 @@ func main() {
 			http.Error(w, "Category not found", http.StatusNotFound)
 		case http.MethodPut:
 			var updatedCategory models.Category
-			err := json.NewDecoder(r.Body).Decode(&updatedCategory)
-			if err != nil {
-				http.Error(w, "Invalid request payload", http.StatusBadRequest)
-				return
-			}
+			parseBody(w, r, &updatedCategory)
 			for i, category := range categories {
 				if category.ID == id {
 					updatedCategory.ID = id
@@ -94,11 +98,7 @@ func main() {
 			w.WriteHeader(http.StatusOK)
 		case http.MethodPost:
 			var newCategory models.Category
-			err := json.NewDecoder(r.Body).Decode(&newCategory)
-			if err != nil {
-				http.Error(w, "Invalid request payload", http.StatusBadRequest)
-				return
-			}
+			parseBody(w, r, &newCategory)
 			newCategory.ID = len(categories) + 1
 			categories = append(categories, newCategory)
 			w.Header().Set("Content-Type", "application/json")

@@ -48,6 +48,24 @@ func main() {
 				}
 			}
 			http.Error(w, "Category not found", http.StatusNotFound)
+		case http.MethodPut:
+			var updatedCategory models.Category
+			err := json.NewDecoder(r.Body).Decode(&updatedCategory)
+			if err != nil {
+				http.Error(w, "Invalid request payload", http.StatusBadRequest)
+				return
+			}
+			for i, category := range categories {
+				if category.ID == id {
+					updatedCategory.ID = id
+					categories[i] = updatedCategory
+					w.Header().Set("Content-Type", "application/json")
+					_ = json.NewEncoder(w).Encode(updatedCategory)
+					w.WriteHeader(http.StatusOK)
+					return
+				}
+			}
+			http.Error(w, "Category not found", http.StatusNotFound)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}

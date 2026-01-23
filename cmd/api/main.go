@@ -66,6 +66,17 @@ func main() {
 				}
 			}
 			http.Error(w, "Category not found", http.StatusNotFound)
+		case http.MethodDelete:
+			for i, category := range categories {
+				if category.ID == id {
+					categories = append(categories[:i], categories[i+1:]...)
+					w.Header().Set("Content-Type", "application/json")
+					_ = json.NewEncoder(w).Encode(map[string]string{"message": "Category deleted"})
+					w.WriteHeader(http.StatusOK)
+					return
+				}
+			}
+			http.Error(w, "Category not found", http.StatusNotFound)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}

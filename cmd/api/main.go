@@ -30,7 +30,6 @@ func main() {
 	config := configs.Init()
 
 	// initialized database
-	fmt.Println("Connecting to database...", config.DBConn)
 	db, err := databases.Init(config.DBConn)
 	if err != nil {
 		log.Fatal("Failed to initialize database:", err)

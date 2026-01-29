@@ -3,7 +3,10 @@ package main
 import (
 	"crud-api-category/configs"
 	"crud-api-category/internal/databases"
+	"crud-api-category/internal/handlers"
 	"crud-api-category/internal/models"
+	"crud-api-category/internal/repositories"
+	"crud-api-category/internal/services"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -35,6 +38,10 @@ func main() {
 		log.Fatal("Failed to initialize database:", err)
 	}
 	defer db.Close()
+
+	categoryRepo := repositories.NewCategoryRepository(db)
+	categoryService := services.NewCategoryService(categoryRepo)
+	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Hello, There! This is Category API")
@@ -102,13 +109,7 @@ func main() {
 	http.HandleFunc("/api/categories", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			w.Header().Set("Content-Type", "application/json")
-			err := json.NewEncoder(w).Encode(categories)
-			if err != nil {
-				http.Error(w, "Failed to encode categories", http.StatusInternalServerError)
-				return
-			}
-			w.WriteHeader(http.StatusOK)
+			categoryHandler.HandleCategories(w, r)
 		case http.MethodPost:
 			var newCategory models.Category
 			parseBody(w, r, &newCategory)

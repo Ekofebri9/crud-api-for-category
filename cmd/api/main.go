@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crud-api-category/configs"
 	"crud-api-category/internal/models"
 	"encoding/json"
 	"fmt"
@@ -23,6 +24,9 @@ func parseBody(w http.ResponseWriter, r *http.Request, v *models.Category) {
 }
 
 func main() {
+	// initialized config
+	config := configs.Init()
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Hello, There! This is Category API")
 	})
@@ -109,8 +113,10 @@ func main() {
 		}
 	})
 
-	fmt.Println("Starting server on :8080")
-	err := http.ListenAndServe(":8080", nil)
+	addr := fmt.Sprintf(":%s", config.Port)
+	fmt.Println("Starting server on :", config.Port)
+
+	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		fmt.Println("Failed to start server:", err)
 	}

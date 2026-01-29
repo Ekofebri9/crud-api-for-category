@@ -5,6 +5,8 @@ import (
 	"crud-api-category/internal/services"
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type CategoryHandler struct {
@@ -59,4 +61,41 @@ func (h *CategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
+}
+
+func (h *CategoryHandler) HandleCategoryByID(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		h.GetByID(w, r)
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func (h *CategoryHandler) GetByID(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
+	categoryID, err := strconv.Atoi(id)
+	if err != nil {
+		http.Error(w, "Invalid category ID", http.StatusBadRequest)
+		return
+	}
+
+	category, err := h.service.GetByID(categoryID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if category == nil {
+		http.Error(w, "Category not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(category)
+	if err != nil {
+		http.Error(w, "Failed to encode category", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }

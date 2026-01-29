@@ -63,19 +63,7 @@ func main() {
 
 		switch r.Method {
 		case http.MethodGet:
-			for _, category := range categories {
-				if category.ID == id {
-					w.Header().Set("Content-Type", "application/json")
-					err := json.NewEncoder(w).Encode(category)
-					if err != nil {
-						http.Error(w, "Failed to encode category", http.StatusInternalServerError)
-						return
-					}
-					w.WriteHeader(http.StatusOK)
-					return
-				}
-			}
-			http.Error(w, "Category not found", http.StatusNotFound)
+			categoryHandler.HandleCategoryByID(w, r)
 		case http.MethodPut:
 			var updatedCategory models.Category
 			parseBody(w, r, &updatedCategory)

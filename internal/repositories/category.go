@@ -39,3 +39,19 @@ func (repo *CategoryRepository) Create(category *models.Category) error {
 	err := repo.db.QueryRow(query, category.Name, category.Description).Scan(&category.ID)
 	return err
 }
+
+func (repo *CategoryRepository) GetByID(id int) (*models.Category, error) {
+	query := "SELECT id, name, description FROM categories WHERE id = $1"
+	row := repo.db.QueryRow(query, id)
+
+	var c models.Category
+	err := row.Scan(&c.ID, &c.Name, &c.Description)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &c, nil
+}

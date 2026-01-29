@@ -11,8 +11,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
-	"strings"
 )
 
 var categories = []models.Category{
@@ -53,33 +51,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	http.HandleFunc("/api/categories/", func(w http.ResponseWriter, r *http.Request) {
-		idStr := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
-		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			http.Error(w, "Invalid category ID", http.StatusBadRequest)
-			return
-		}
-
-		switch r.Method {
-		case http.MethodGet, http.MethodPut:
-			categoryHandler.HandleCategoryByID(w, r)
-		case http.MethodDelete:
-			for i, category := range categories {
-				if category.ID == id {
-					categories = append(categories[:i], categories[i+1:]...)
-					w.Header().Set("Content-Type", "application/json")
-					_ = json.NewEncoder(w).Encode(map[string]string{"message": "Category deleted"})
-					w.WriteHeader(http.StatusOK)
-					return
-				}
-			}
-			http.Error(w, "Category not found", http.StatusNotFound)
-		default:
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		}
-	})
-
+	http.HandleFunc("/api/categories/", categoryHandler.HandleCategoryByID)
 	http.HandleFunc("/api/categories", categoryHandler.HandleCategories)
 
 	addr := fmt.Sprintf(":%s", config.Port)

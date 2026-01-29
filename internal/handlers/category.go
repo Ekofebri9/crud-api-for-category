@@ -69,6 +69,8 @@ func (h *CategoryHandler) HandleCategoryByID(w http.ResponseWriter, r *http.Requ
 		h.GetByID(w, r)
 	case http.MethodPut:
 		h.Update(w, r)
+	case http.MethodDelete:
+		h.Delete(w, r)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
@@ -126,5 +128,24 @@ func (h *CategoryHandler) Update(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to encode category", http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *CategoryHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
+	categoryID, err := strconv.Atoi(id)
+	if err != nil {
+		http.Error(w, "Invalid category ID", http.StatusBadRequest)
+		return
+	}
+
+	err = h.service.Delete(categoryID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]string{"message": "Category deleted"})
 	w.WriteHeader(http.StatusOK)
 }

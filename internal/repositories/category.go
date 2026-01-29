@@ -61,3 +61,9 @@ func (repo *CategoryRepository) Update(category *models.Category) error {
 	_, err := repo.db.Exec(query, category.Name, category.Description, category.ID)
 	return err
 }
+
+func (repo *CategoryRepository) Delete(id int) error {
+	query := "DELETE FROM categories WHERE id = $1"
+	_, err := repo.db.Exec(query, id)
+	return err
+}

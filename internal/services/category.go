@@ -24,3 +24,7 @@ func (s *CategoryService) GetByID(id int) (*models.Category, error) {
 func (s *CategoryService) Create(category *models.Category) error {
 	return s.repo.Create(category)
 }
+
+func (s *CategoryService) Update(category *models.Category) error {
+	return s.repo.Update(category)
+}

@@ -67,6 +67,8 @@ func (h *CategoryHandler) HandleCategoryByID(w http.ResponseWriter, r *http.Requ
 	switch r.Method {
 	case http.MethodGet:
 		h.GetByID(w, r)
+	case http.MethodPut:
+		h.Update(w, r)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
@@ -93,6 +95,33 @@ func (h *CategoryHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(category)
+	if err != nil {
+		http.Error(w, "Failed to encode category", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *CategoryHandler) Update(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
+	categoryID, err := strconv.Atoi(id)
+	if err != nil {
+		http.Error(w, "Invalid category ID", http.StatusBadRequest)
+		return
+	}
+
+	var updatedCategory models.Category
+	parseBody(w, r, &updatedCategory)
+	updatedCategory.ID = categoryID
+
+	err = h.service.Update(&updatedCategory)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(updatedCategory)
 	if err != nil {
 		http.Error(w, "Failed to encode category", http.StatusInternalServerError)
 		return

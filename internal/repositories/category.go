@@ -55,3 +55,9 @@ func (repo *CategoryRepository) GetByID(id int) (*models.Category, error) {
 
 	return &c, nil
 }
+
+func (repo *CategoryRepository) Update(category *models.Category) error {
+	query := "UPDATE categories SET name = $1, description = $2 WHERE id = $3"
+	_, err := repo.db.Exec(query, category.Name, category.Description, category.ID)
+	return err
+}

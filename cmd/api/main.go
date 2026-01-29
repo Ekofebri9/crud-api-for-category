@@ -106,22 +106,7 @@ func main() {
 		}
 	})
 
-	http.HandleFunc("/api/categories", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodGet:
-			categoryHandler.HandleCategories(w, r)
-		case http.MethodPost:
-			var newCategory models.Category
-			parseBody(w, r, &newCategory)
-			newCategory.ID = len(categories) + 1
-			categories = append(categories, newCategory)
-			w.Header().Set("Content-Type", "application/json")
-			_ = json.NewEncoder(w).Encode(newCategory)
-			w.WriteHeader(http.StatusCreated)
-		default:
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		}
-	})
+	http.HandleFunc("/api/categories", categoryHandler.HandleCategories)
 
 	addr := fmt.Sprintf(":%s", config.Port)
 	fmt.Println("Starting server on :", config.Port)

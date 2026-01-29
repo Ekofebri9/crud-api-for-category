@@ -33,3 +33,9 @@ func (repo *CategoryRepository) GetAll() ([]models.Category, error) {
 
 	return categories, nil
 }
+
+func (repo *CategoryRepository) Create(category *models.Category) error {
+	query := "INSERT INTO categories (name, description) VALUES ($1, $2) RETURNING id"
+	err := repo.db.QueryRow(query, category.Name, category.Description).Scan(&category.ID)
+	return err
+}

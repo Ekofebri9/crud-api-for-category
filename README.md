@@ -15,9 +15,11 @@ go build cmd/api/main.go
 then execute the build result
 
 ### Description
-Detail Task [here](https://docs.kodingworks.io/s/17137b9a-ed7a-4950-ba9e-eb11299531c2)
+Detail Task 1 [here](https://docs.kodingworks.io/s/17137b9a-ed7a-4950-ba9e-eb11299531c2)
+Detail Task 2 [here](https://docs.kodingworks.io/s/a378a9fe-c0e0-4fa1-a896-43ae347a7b61)
 
-See the original tutorial [here](https://docs.kodingworks.io/s/01e57b74-74e6-44df-ac02-7e30a2478528)
+See the original tutorial 1 [here](https://docs.kodingworks.io/s/01e57b74-74e6-44df-ac02-7e30a2478528)
+See the original tutorial 2 [here](https://docs.kodingworks.io/s/a378a9fe-c0e0-4fa1-a896-43ae347a7b61)
 
 See My original repo from tutorial [kasir-api](https://github.com/Ekofebri9/kasir-api)
 

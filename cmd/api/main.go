@@ -4,7 +4,6 @@ import (
 	"crud-api-category/configs"
 	"crud-api-category/internal/databases"
 	"crud-api-category/internal/handlers"
-	"crud-api-category/internal/models"
 	"crud-api-category/internal/repositories"
 	"crud-api-category/internal/services"
 	"encoding/json"
@@ -12,19 +11,6 @@ import (
 	"log"
 	"net/http"
 )
-
-var categories = []models.Category{
-	{ID: 1, Name: "Makanan Ringan", Description: "Berbagai jenis makanan ringan"},
-	{ID: 2, Name: "Minuman", Description: "Berbagai jenis minuman segar"},
-}
-
-func parseBody(w http.ResponseWriter, r *http.Request, v *models.Category) {
-	err := json.NewDecoder(r.Body).Decode(v)
-	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-		return
-	}
-}
 
 func main() {
 	// initialized config

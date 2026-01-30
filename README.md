@@ -21,7 +21,7 @@ Detail Task 2 [here](https://docs.kodingworks.io/s/a378a9fe-c0e0-4fa1-a896-43ae3
 See the original tutorial 1 [here](https://docs.kodingworks.io/s/01e57b74-74e6-44df-ac02-7e30a2478528)
 See the original tutorial 2 [here](https://docs.kodingworks.io/s/a378a9fe-c0e0-4fa1-a896-43ae347a7b61)
 
-See My original repo from tutorial [kasir-api](https://github.com/Ekofebri9/kasir-api)
+See My original repo from tutorial [basic-rest-api-go](https://github.com/Ekofebri9/basic-rest-api-go)
 
 ### Connect with me
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ekofebri)
